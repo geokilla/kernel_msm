@@ -120,12 +120,8 @@ struct pm8xxx_mpp_init {
 
 /* Initial PM8921 GPIO configurations */
 static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
-#ifdef CONFIG_EARJACK_DEBUGGER
 	PM8921_GPIO_INPUT(13, PM_GPIO_PULL_DN), /* EARJACK_DEBUGGER */
-#endif
-#ifdef CONFIG_SLIMPORT_ANX7808
 	PM8921_GPIO_INPUT(14, PM_GPIO_PULL_DN), /* SLIMPORT_CBL_DET */
-#endif
 	PM8921_GPIO_OUTPUT(15, 0, HIGH), /* ANX_P_DWN_CTL */
 	PM8921_GPIO_OUTPUT(16, 0, HIGH), /* ANX_AVDD33_EN */
 	PM8921_GPIO_OUTPUT(17, 0, HIGH), /* CAM_VCM_EN */
@@ -609,13 +605,6 @@ static struct matrix_keymap_data keymap_data = {
 	.keymap         = keymap,
 };
 
-static __init void mako_fixed_keymap(void) {
-	if (lge_get_board_revno() < HW_REV_C) {
-		keymap[0] = KEY(0, 0, KEY_VOLUMEUP);
-		keymap[1] = KEY(0, 1, KEY_VOLUMEDOWN);
-	}
-}
-
 static struct pm8xxx_keypad_platform_data keypad_data = {
 	.input_name             = "keypad_8064",
 	.input_phys_device      = "keypad_8064/input0",
@@ -802,7 +791,6 @@ void __init apq8064_init_pmic(void)
 {
 	pmic_reset_irq = PM8921_IRQ_BASE + PM8921_RESOUT_IRQ;
 
-	mako_fixed_keymap();
 	mako_set_adcmap();
 	mako_fixed_leds();
 
